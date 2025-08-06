@@ -10,7 +10,10 @@ return {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
-        tsserver = false,
+        tsserver = {},
+        pyright = {},
+        html = {},
+        cssls = {},
       },
     },
   },
