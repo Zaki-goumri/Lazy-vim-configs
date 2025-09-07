@@ -1,3 +1,7 @@
--- Keymaps are automatically loaded on the VeryLazy event
--- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
--- Add any additional keymaps here
+-- Quick toggle for diagnostics
+vim.keymap.set("n", "<leader>td", function()
+  vim.diagnostic.config({ virtual_text = not vim.diagnostic.config().virtual_text })
+end, { desc = "Toggle Diagnostics" })
+
+-- Manual LSP restart if needed
+vim.keymap.set("n", "<leader>lr", "<cmd>LspRestart<cr>", { desc = "LSP Restart" })

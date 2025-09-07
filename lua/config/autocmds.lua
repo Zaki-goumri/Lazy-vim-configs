@@ -3,80 +3,37 @@ local function augroup(name)
   return vim.api.nvim_create_augroup("lazyvim_" .. name, { clear = true })
 end
 
--- Format on save
+-- Simplified format on save (only for specific filetypes)
 vim.api.nvim_create_autocmd("BufWritePre", {
   group = augroup("format_on_save"),
-  pattern = "*",
+  pattern = { "*.js", "*.ts", "*.jsx", "*.tsx", "*.py" },
   callback = function(args)
-    require("conform").format({ bufnr = args.buf })
+    -- Only format if conform is available and file is not too large
+    local ok, conform = pcall(require, "conform")
+    if ok and vim.api.nvim_buf_line_count(args.buf) < 1000 then
+      conform.format({ bufnr = args.buf, timeout_ms = 1000 })
+    end
   end,
 })
 
--- This will force transparency *after* any colorscheme loads
+-- Keep transparency settings
 vim.api.nvim_create_autocmd("ColorScheme", {
   group = augroup("transparency"),
   pattern = "*",
   callback = function()
-    -- Set background transparent
     vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
     vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
     vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
     vim.api.nvim_set_hl(0, "FloatBorder", { bg = "none" })
     vim.api.nvim_set_hl(0, "Pmenu", { bg = "none" })
     vim.api.nvim_set_hl(0, "PmenuSel", { bg = "none" })
-    vim.api.nvim_set_hl(0, "NvimTreeNormal", { bg = "none" })
-    vim.api.nvim_set_hl(0, "NvimTreeNormalNC", { bg = "none" })
-    vim.api.nvim_set_hl(0, "TelescopeNormal", { bg = "none" })
-    vim.api.nvim_set_hl(0, "TelescopeBorder", { bg = "none" })
   end,
 })
 
--- Python-specific configuration
-vim.api.nvim_create_autocmd("FileType", {
-  group = augroup("python_setup"),
-  pattern = "python",
-  callback = function()
-    -- Add current project root to Python path
-    local cwd = vim.fn.getcwd()
-    vim.env.PYTHONPATH = cwd .. ":" .. (vim.env.PYTHONPATH or "")
+-- Remove Python-specific autocmd that might cause issues
+-- (commented out the complex Python setup)
 
-    -- Try to find and use virtual environment
-    local venv_paths = {
-      cwd .. "/venv/bin/python",
-      cwd .. "/.venv/bin/python",
-      cwd .. "/env/bin/python",
-      vim.fn.expand("~/venv/bin/python"),
-    }
-
-    for _, path in ipairs(venv_paths) do
-      if vim.fn.executable(path) == 1 then
-        vim.g.python3_host_prog = path
-        break
-      end
-    end
-
-    -- Configure buffer-local Python settings
-    vim.bo.expandtab = true
-    vim.bo.shiftwidth = 4
-    vim.bo.tabstop = 4
-    vim.bo.softtabstop = 4
-  end,
-})
-
--- Optional: Auto-save functionality
--- vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
---   group = augroup("auto_save"),
---   pattern = "*",
---   callback = function()
---     -- Only auto-save if file exists and is not in certain directories
---     local bufname = vim.api.nvim_buf_get_name(0)
---     if bufname ~= "" and not bufname:match("^/tmp/") and not bufname:match("%.git/") then
---       vim.cmd("silent! write")
---     end
---   end,
--- })
-
--- Optional: Highlight on yank
+-- Keep simple highlight on yank
 vim.api.nvim_create_autocmd("TextYankPost", {
   group = augroup("highlight_yank"),
   pattern = "*",
@@ -85,7 +42,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 
--- Optional: Auto-close certain filetypes
+-- Keep simple auto-close for help windows
 vim.api.nvim_create_autocmd("FileType", {
   group = augroup("close_with_q"),
   pattern = { "help", "lspinfo", "man", "qf", "query" },

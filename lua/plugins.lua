@@ -2,13 +2,31 @@ return {
   -- Load LazyVim core plugins first
   { import = "lazyvim.plugins" },
 
-  -- Optionally include extras that are working for you
-  -- { import = "lazyvim.plugins.extras.lang.typescript" },
+  -- Disable notifications and popups
+  {
+    "rcarriga/nvim-notify",
+    enabled = false, -- Completely disable notifications
+  },
+  {
+    "folke/noice.nvim",
+    enabled = false, -- Disable noice (fancy notifications)
+  },
+  {
+    "goolord/alpha-nvim",
+    enabled = false, -- Keep dashboard disabled
+  },
 
-  -- Your LSP tweaks
+  -- Simple LSP configuration
   {
     "neovim/nvim-lspconfig",
     opts = {
+      -- Disable LSP progress notifications
+      diagnostics = {
+        virtual_text = false, -- Remove inline error text
+        signs = true,
+        underline = true,
+        update_in_insert = false,
+      },
       servers = {
         tsserver = {},
         pyright = {},
@@ -16,28 +34,5 @@ return {
         cssls = {},
       },
     },
-  },
-
-  -- Notification plugin
-  {
-    "rcarriga/nvim-notify",
-    config = function()
-      require("notify").setup({
-        stages = "fade",
-        timeout = 2000,
-        max_height = function()
-          return math.floor(vim.o.lines * 0.75)
-        end,
-        max_width = function()
-          return math.floor(vim.o.columns * 0.75)
-        end,
-        background_colour = "#000000",
-      })
-      vim.notify = require("notify")
-    end,
-  },
-  {
-    "goolord/alpha-nvim",
-    enabled = false,
   },
 }
