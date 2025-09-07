@@ -9,7 +9,7 @@ return {
         settings = {
           python = {
             analysis = {
-              typeCheckingMode = "off", -- Turn off strict type checking
+              typeCheckingMode = "off",
               autoSearchPaths = true,
               useLibraryCodeForTypes = true,
             },
@@ -31,7 +31,7 @@ return {
     opts = {
       ensure_installed = {
         "pyright",
-        "typescript-language-server", -- Use this instead of tsserver
+        "typescript-language-server",
         "prettier",
         "eslint_d",
       },

@@ -1,32 +1,17 @@
 return {
-  -- Load LazyVim core plugins first
+  -- Load LazyVim core plugins
   { import = "lazyvim.plugins" },
 
-  -- Disable notifications and popups
-  {
-    "rcarriga/nvim-notify",
-    enabled = false, -- Completely disable notifications
-  },
-  {
-    "folke/noice.nvim",
-    enabled = false, -- Disable noice (fancy notifications)
-  },
+  -- Just disable the dashboard
   {
     "goolord/alpha-nvim",
-    enabled = false, -- Keep dashboard disabled
+    enabled = false,
   },
 
-  -- Simple LSP configuration
+  -- Keep your LSP servers simple
   {
     "neovim/nvim-lspconfig",
     opts = {
-      -- Disable LSP progress notifications
-      diagnostics = {
-        virtual_text = false, -- Remove inline error text
-        signs = true,
-        underline = true,
-        update_in_insert = false,
-      },
       servers = {
         tsserver = {},
         pyright = {},

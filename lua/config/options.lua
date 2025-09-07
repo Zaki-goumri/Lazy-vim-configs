@@ -18,3 +18,14 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 -- Force the colorscheme after setting up transparency
 
 vim.cmd.colorscheme("default") -- Or "habamax", "evening", "desert", etc.
+
+-- Enable built-in completion as fallback
+vim.opt.completeopt = { "menu", "menuone", "noselect" }
+vim.opt.pumheight = 10 -- Limit popup menu height
+
+-- Enable omnifunc for LSP
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(args)
+    vim.bo[args.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
+  end,
+})
